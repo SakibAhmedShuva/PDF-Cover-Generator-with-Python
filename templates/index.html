@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Page Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #00BCD4, #9C27B0);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 40px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #00BCD4;
+        }
+        
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #00BCD4;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: block;
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .file-upload-label:hover {
+            background: #e8f5e8;
+            border-color: #00BCD4;
+        }
+        
+        .color-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .color-input {
+            width: 50px !important;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 5px !important;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #00BCD4, #009688);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: #aaa;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #757575, #616161);
+            margin-bottom: 15px;
+        }
+        
+        .preview-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Cover Page Generator</h1>
+            <p>Create professional A4 cover pages with custom branding and content</p>
+        </div>
+        
+        <div class="main-content">
+            <form id="coverForm">
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3>📋 Header Section</h3>
+                        
+                        <div class="form-group">
+                            <label for="exclusive_text">Exclusive Text</label>
+                            <input type="text" id="exclusive_text" value="EXCLUSIVE" placeholder="e.g., EXCLUSIVE">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Exclusive Text Color</label>
+                            <div class="color-group">
+                                <input type="text" id="exclusive_color" value="#00BCD4">
+                                <input type="color" id="exclusive_color_picker" value="#00BCD4" class="color-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="only_for_text">Only For Text</label>
+                            <input type="text" id="only_for_text" value="ONLY FOR" placeholder="e.g., ONLY FOR">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Only For Text Color</label>
+                            <div class="color-group">
+                                <input type="text" id="only_for_color" value="#9C27B0">
+                                <input type="color" id="only_for_color_picker" value="#9C27B0" class="color-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="company_name">Company Name</label>
+                            <input type="text" id="company_name" value="UTHA FASHION LTD." placeholder="Your Company Name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Company Logo</label>
+                            <div class="file-upload">
+                                <input type="file" id="company_logo" accept="image/*">
+                                <label for="company_logo" class="file-upload-label">
+                                    📁 Choose Company Logo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>📄 Main Content</h3>
+                        
+                        <div class="form-group">
+                            <label for="main_title">Main Title</label>
+                            <input type="text" id="main_title" value="QUOTATION" placeholder="e.g., QUOTATION">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Main Title Color</label>
+                            <div class="color-group">
+                                <input type="text" id="main_title_color" value="#00BCD4">
+                                <input type="color" id="main_title_color_picker" value="#00BCD4" class="color-input">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subtitle">Subtitle/Description</label>
+                            <textarea id="subtitle" placeholder="Enter subtitle or description (use line breaks)">SUPPLY AND INSTALLATION OF
+ADDITIONAL MATERIALS OF FIRE
+HYDRANT AND SPRINKLER SYSTEM</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>🎨 Background</h3>
+                        
+                        <div class="form-group">
+                            <label for="background_type">Background Type</label>
+                            <select id="background_type">
+                                <option value="gradient" selected>Gradient</option>
+                                <option value="solid">Solid Color</option>
+                            </select>
+                        </div>
+                        
+                        <div id="gradient_controls">
+                            <div class="form-group">
+                                <label>Start Color</label>
+                                <div class="color-group">
+                                    <input type="text" id="start_color" value="#FFFFFF">
+                                    <input type="color" id="start_color_picker" value="#FFFFFF" class="color-input">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>End Color</label>
+                                <div class="color-group">
+                                    <input type="text" id="end_color" value="#E0F7FA">
+                                    <input type="color" id="end_color_picker" value="#E0F7FA" class="color-input">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="solid_controls" style="display: none;">
+                            <div class="form-group">
+                                <label>Background Color</label>
+                                <div class="color-group">
+                                    <input type="text" id="bg_color" value="#FFFFFF">
+                                    <input type="color" id="bg_color_picker" value="#FFFFFF" class="color-input">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Curve Color</label>
+                            <div class="color-group">
+                                <input type="text" id="curve_color" value="#00BCD4">
+                                <input type="color" id="curve_color_picker" value="#00BCD4" class="color-input">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>🏢 Footer Section</h3>
+                        
+                        <div class="form-group">
+                            <label>Company Info Logo</label>
+                            <div class="file-upload">
+                                <input type="file" id="company_info_logo" accept="image/*">
+                                <label for="company_info_logo" class="file-upload-label">
+                                    📁 Choose Company Info Logo
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="company_tagline">Company Tagline</label>
+                            <input type="text" id="company_tagline" value="protect to progress Ltd." placeholder="Company tagline">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="partner_label">Partner Label</label>
+                            <input type="text" id="partner_label" value="PARTNER OF" placeholder="e.g., PARTNER OF">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Partner Logo</label>
+                            <div class="file-upload">
+                                <input type="file" id="partner_logo" accept="image/*">
+                                <label for="partner_logo" class="file-upload-label">
+                                    📁 Choose Partner Logo
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="partner_tagline">Partner Tagline</label>
+                            <input type="text" id="partner_tagline" value="PASSION TO PROTECT" placeholder="Partner tagline">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="preview-section">
+                <button type="button" class="btn btn-secondary" onclick="loadSampleConfig()">📋 Load Sample Config</button>
+                <button type="button" class="btn" onclick="generateCover()" id="generateBtn">🚀 Generate Cover Page</button>
+                <div id="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            syncColorPickers();
+            setupFileInputs();
+            document.getElementById('background_type').dispatchEvent(new Event('change'));
+        });
+
+        // Color picker synchronization
+        function syncColorPickers() {
+            const colorPairs = [
+                ['exclusive_color', 'exclusive_color_picker'],
+                ['only_for_color', 'only_for_color_picker'],
+                ['main_title_color', 'main_title_color_picker'],
+                ['start_color', 'start_color_picker'],
+                ['end_color', 'end_color_picker'],
+                ['bg_color', 'bg_color_picker'],
+                ['curve_color', 'curve_color_picker']
+            ];
+            
+            colorPairs.forEach(([textId, pickerId]) => {
+                const textInput = document.getElementById(textId);
+                const colorPicker = document.getElementById(pickerId);
+                
+                if (textInput && colorPicker) {
+                    textInput.addEventListener('input', () => colorPicker.value = textInput.value);
+                    colorPicker.addEventListener('input', () => textInput.value = colorPicker.value);
+                }
+            });
+        }
+
+        // Setup file input labels
+        function setupFileInputs() {
+            document.querySelectorAll('input[type=file]').forEach(input => {
+                input.addEventListener('change', () => {
+                    const label = input.nextElementSibling;
+                    const fileName = input.files[0] ? input.files[0].name : `📁 Choose...`;
+                    label.textContent = `📄 ${fileName}`;
+                });
+            });
+        }
+
+        // Background type toggle
+        document.getElementById('background_type').addEventListener('change', function() {
+            const gradientControls = document.getElementById('gradient_controls');
+            const solidControls = document.getElementById('solid_controls');
+            if (this.value === 'gradient') {
+                gradientControls.style.display = 'block';
+                solidControls.style.display = 'none';
+            } else {
+                gradientControls.style.display = 'none';
+                solidControls.style.display = 'block';
+            }
+        });
+
+        // Load sample configuration from the server
+        async function loadSampleConfig() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status loading">Loading sample configuration...</div>`;
+            try {
+                const response = await fetch('/api/sample-config');
+                if (!response.ok) throw new Error('Failed to fetch sample config.');
+                const config = await response.json();
+                updateUI(config);
+                statusDiv.innerHTML = `<div class="status success">✅ Sample configuration loaded!</div>`;
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+                console.error('Failed to load sample config:', error);
+            }
+        }
+
+        // Update UI with fetched config
+        function updateUI(config) {
+            document.getElementById('background_type').value = config.background.type;
+            document.getElementById('start_color').value = config.background.start_color;
+            document.getElementById('end_color').value = config.background.end_color;
+            document.getElementById('curve_color').value = config.curved_elements.color;
+            document.getElementById('exclusive_text').value = config.header.exclusive_text;
+            document.getElementById('exclusive_color').value = config.header.exclusive_color;
+            document.getElementById('only_for_text').value = config.header.only_for_text;
+            document.getElementById('only_for_color').value = config.header.only_for_color;
+            document.getElementById('company_name').value = config.header.company_name;
+            document.getElementById('main_title').value = config.main_content.main_title;
+            document.getElementById('main_title_color').value = config.main_content.main_title_color;
+            document.getElementById('subtitle').value = config.main_content.subtitle;
+            document.getElementById('company_tagline').value = config.footer.company_info.tagline;
+            document.getElementById('partner_label').value = config.footer.partner.label;
+            document.getElementById('partner_tagline').value = config.footer.partner.tagline;
+            
+            // Trigger events to update UI elements
+            document.getElementById('background_type').dispatchEvent(new Event('change'));
+            syncColorPickers(); // Resync color pickers after setting values
+
+            // Reset file inputs
+             document.querySelectorAll('input[type=file]').forEach(input => {
+                input.value = ''; // Clear the file selection
+                const label = input.nextElementSibling;
+                const originalText = label.htmlFor.replace(/_/g, ' ').replace(/(?:^|\s)\S/g, a => a.toUpperCase()).replace('logo', 'Logo');
+                label.textContent = `📁 Choose ${originalText}`;
+            });
+        }
+
+        // Upload a single file
+        async function uploadFile(fileInputId) {
+            const fileInput = document.getElementById(fileInputId);
+            if (!fileInput.files.length) return "";
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const response = await fetch('/api/upload', { method: 'POST', body: formData });
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.error || `Failed to upload ${fileInput.files[0].name}`);
+            }
+            const data = await response.json();
+            return data.path;
+        }
+
+        // Main function to generate the cover page
+        async function generateCover() {
+            const generateBtn = document.getElementById('generateBtn');
+            const statusDiv = document.getElementById('status');
+
+            generateBtn.disabled = true;
+            statusDiv.innerHTML = `<div class="status loading">⚙️ Uploading files and generating cover... Please wait.</div>`;
+
+            try {
+                // Upload all files concurrently and wait for all to complete
+                const [companyLogoPath, companyInfoLogoPath, partnerLogoPath] = await Promise.all([
+                    uploadFile('company_logo'),
+                    uploadFile('company_info_logo'),
+                    uploadFile('partner_logo')
+                ]);
+
+                // Construct the configuration object from form values
+                const config = {
+                    background: {
+                        type: document.getElementById('background_type').value,
+                        start_color: document.getElementById('start_color').value,
+                        end_color: document.getElementById('end_color').value,
+                        color: document.getElementById('bg_color').value,
+                        direction: "vertical",
+                    },
+                    curved_elements: { color: document.getElementById('curve_color').value },
+                    header: {
+                        exclusive_text: document.getElementById('exclusive_text').value,
+                        exclusive_color: document.getElementById('exclusive_color').value,
+                        only_for_text: document.getElementById('only_for_text').value,
+                        only_for_color: document.getElementById('only_for_color').value,
+                        company_name: document.getElementById('company_name').value,
+                        company_logo: companyLogoPath,
+                    },
+                    main_content: {
+                        main_title: document.getElementById('main_title').value,
+                        main_title_color: document.getElementById('main_title_color').value,
+                        subtitle: document.getElementById('subtitle').value,
+                    },
+                    footer: {
+                        company_info: {
+                            logo: companyInfoLogoPath,
+                            tagline: document.getElementById('company_tagline').value,
+                        },
+                        partner: {
+                            label: document.getElementById('partner_label').value,
+                            logo: partnerLogoPath,
+                            tagline: document.getElementById('partner_tagline').value,
+                        },
+                    },
+                };
+                
+                // Send the configuration to the backend to generate the PDF
+                const genResponse = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config),
+                });
+
+                if (!genResponse.ok) {
+                    const err = await genResponse.json();
+                    throw new Error(err.error || 'Failed to generate PDF.');
+                }
+
+                const result = await genResponse.json();
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ Success! Your cover page is ready.
+                        <a href="${result.download_url}" target="_blank" download><strong>Click here to download</strong></a>
+                    </div>`;
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+                console.error('Generation failed:', error);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
